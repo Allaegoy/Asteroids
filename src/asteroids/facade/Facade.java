@@ -8,19 +8,18 @@ public class Facade implements IFacade {
 
 	@Override
 	public Ship createShip() throws ModelException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
-			throws ModelException {
+	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws ModelException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public double[] getShipPosition(Ship ship) throws ModelException {
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
