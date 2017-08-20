@@ -18,7 +18,7 @@ public class Part1TestPartial {
 	IFacade facade;
 
 	@Before
-	public void setUp() {
+	public void setUp() { 
 		facade = new Facade();
 	}
 

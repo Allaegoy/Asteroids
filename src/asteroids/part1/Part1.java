@@ -1,6 +1,7 @@
 package asteroids.part1;
 
 import asteroids.part1.facade.IFacade;
+
 import asteroids.part1.internal.AsteroidsFrame;
 
 public class Part1 {

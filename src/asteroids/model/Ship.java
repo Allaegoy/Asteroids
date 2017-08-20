@@ -1,6 +1,9 @@
 package asteroids.model;
 
+import asteroids.Basic;
+import asteroids.Raw;
 import asteroids.util.ModelException;
+import be.kuleuven.cs.som.annotate.Immutable;
 
 /** TO BE ADDED TO CLASS HEADING
  * @invar  The x-position of each spaceship must be a valid x-position for any
@@ -24,6 +27,7 @@ import asteroids.util.ModelException;
  *       | canHaveAsShapeRadius(this.getShapeRadius())
  */
 public class Ship {
+	static final double MINIMUM_SHAPE_RADIUS = 10;
 
 	/**
 	 * Initialize this new spaceship with given (x, y)-position.
@@ -111,8 +115,6 @@ public class Ship {
 			yVelocity = 0;
 		setYVelocity(yVelocity);
 
-		c = 300000;
-
 		this.setOrientation(orientation);
 
 		if (! canHaveAsShapeRadius(shapeRadius))
@@ -137,7 +139,7 @@ public class Ship {
 	/**
 	 * Return the x-position of this spaceship.
 	 */
-	//	@Basic @Raw
+	@Basic @Raw
 	public double getXPosition() {
 		return this.x;
 	}
@@ -168,7 +170,7 @@ public class Ship {
 	 *         spaceship.
 	 *       | ! isValidXPosition(getXPosition())
 	 */
-	//	@Raw
+	@Raw
 	public void setXPosition(double x) 
 			throws InvalidXException {
 		if (! isValidXPosition(x))
@@ -189,7 +191,7 @@ public class Ship {
 	/**
 	 * Return the y-position of this spaceship.
 	 */
-	//	@Basic @Raw
+	@Basic @Raw
 	public double getYPosition() {
 		return this.y;
 	}
@@ -220,7 +222,7 @@ public class Ship {
 	 *         spaceship.
 	 *       | ! isValidYPosition(getYPosition())
 	 */
-	//	@Raw
+	@Raw
 	public void setYPosition(double y) 
 			throws InvalidYException {
 		if (! isValidYPosition(y))
@@ -244,7 +246,7 @@ public class Ship {
 	/**
 	 * Return the xVelocity of this Ship.
 	 */
-	//	@Basic @Raw
+	@Basic @Raw
 	public double getXVelocity() {
 		return this.xVelocity;
 	}
@@ -273,7 +275,7 @@ public class Ship {
 	 *       | if (isValidXVelocity(xVelocity))
 	 *       |   then new.getXVelocity() == xVelocity
 	 */
-	//	@Raw
+	@Raw
 	public void setXVelocity(double xVelocity) {
 		if (isValidXVelocity(xVelocity))
 			this.xVelocity = xVelocity;
@@ -294,7 +296,7 @@ public class Ship {
 	/**
 	 * Return the yVelocity of this Ship.
 	 */
-	//@Basic @Raw
+	@Basic @Raw
 	public double getYVelocity() {
 		return this.yVelocity;
 	}
@@ -323,7 +325,7 @@ public class Ship {
 	 *       | if (isValidYVelocity(yVelocity))
 	 *       |   then new.getYVelocity() == yVelocity
 	 */
-	//@Raw
+	@Raw
 	public void setYVelocity(double yVelocity) {
 		if (isValidYVelocity(yVelocity))
 			this.yVelocity = yVelocity;
@@ -344,9 +346,9 @@ public class Ship {
 	/**
 	 * Return the maximum velocity of this spaceship.
 	 */
-	//	@Basic @Raw @Immutable
+	@Basic @Raw @Immutable
 	public double getMaximumVelocity() {
-		return this.c;
+		return c;
 	}
 
 	/**
@@ -357,7 +359,7 @@ public class Ship {
 	 * @return 
 	 *       | result == (c >= 0 && c<= MaximumVelocity)
 	 */
-	//	@Raw
+	@Raw
 	public boolean canHaveAsMaximumVelocity(double c) {
 		if(c >= 0 && c<= this.getMaximumVelocity()) {
 			return true;
@@ -369,7 +371,7 @@ public class Ship {
 	/**
 	 * Variable registering the maximum velocity of this spaceship.
 	 */
-	private final double c;
+	private final double c = 300000;
 
 
 	//////////////////////////////////////
@@ -379,7 +381,7 @@ public class Ship {
 	/**
 	 * Return the orientation of this spaceship.
 	 */
-	//	@Basic @Raw
+	@Basic @Raw
 	public double getOrientation() {
 		return this.orientation;
 	}
@@ -394,7 +396,11 @@ public class Ship {
 	 *       | result == ( 0 <= orientation <= 2*Math.PI)
 	 */
 	public static boolean isValidOrientation(double orientation) {
-		return false;
+		if( 0 <= orientation && orientation <= 2*Math.PI) {
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	/**
@@ -409,7 +415,7 @@ public class Ship {
 	 *         orientation.
 	 *       | new.getOrientation() == orientation
 	 */
-	//	@Raw
+	@Raw
 	public void setOrientation(double orientation) {
 		assert isValidOrientation(orientation);
 		this.orientation = orientation;
@@ -429,7 +435,7 @@ public class Ship {
 	/**
 	 * Return the shapeRadius of this spaceship.
 	 */
-	//	@Basic @Raw @Immutable
+	@Basic @Raw @Immutable
 	public double getShapeRadius() {
 		return this.shapeRadius;
 	}
@@ -442,9 +448,13 @@ public class Ship {
 	 * @return 
 	 *       | result == (10 <= shapeRadius)
 	 */
-	//	@Raw
+	@Raw
 	public boolean canHaveAsShapeRadius(double shapeRadius) {
-		return false;
+		if(MINIMUM_SHAPE_RADIUS <= shapeRadius) {
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	/**
@@ -479,6 +489,10 @@ public class Ship {
 	 * @throws ModelException 
 	 */
 	public void move(double dt) throws ModelException {
+		if(dt < 0) {
+			//throw new negativeTimeException();
+			throw new ModelException("negativeTimeException thrown at Ship.Move");
+		}
 		try{
 			setXPosition(this.getXPosition() + this.getXVelocity()*dt);
 			setYPosition(this.getYPosition() + this.getYVelocity()*dt);
@@ -504,7 +518,7 @@ public class Ship {
 	 */
 	public void turn(double angle) {
 		double temp = this.getOrientation() + angle;
-		double result = temp % Math.PI*2; //+ Math.PI*2;
+		double result = temp % (Math.PI*2); //+ Math.PI*2;
 		if(result < 0) {
 			result += Math.PI*2;
 		}
@@ -553,6 +567,10 @@ public class Ship {
 	
 	
 	public static double getDistanceBetween (Ship ship1, Ship ship2) {
+		if(ship1 == ship2) {
+			return 0;
+		}
+		
 		double xDistance = ship1.getXPosition() - ship2.getXPosition();
 		double yDistance = ship1.getYPosition() - ship2.getYPosition();
 		
@@ -619,8 +637,4 @@ public class Ship {
 			return collisionPosition;
 		}
 	}
-	
-	
-	
-
 }
